@@ -1,6 +1,8 @@
 package com.rest.service;
 
+
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,6 +36,10 @@ protected HttpHeaders getHttpHeaders() {
 	HttpHeaders requestHeaders = new HttpHeaders();
 	//requestHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 	//	requestHeaders.set("Authorization", "Basic ABC==");
+	String auth = "admin" + ":" + "root123";
+    byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes());
+    String authHeader = "Basic " + new String( encodedAuth );
+    requestHeaders.set("Authorization", authHeader);
 	return requestHeaders;
 }
 
@@ -47,6 +53,7 @@ protected HttpHeaders getHttpHeaders() {
 	public ResponseEntity<ProductVO> updateProduct(ProductVO product) {
 		String url= baseSellerUrl + "products/product/" + product.getId();
 		HttpEntity<ProductVO> httpEntity = new HttpEntity<>(product, getHttpHeaders());
+		
 		ResponseEntity<ProductVO> result = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, ProductVO.class);
 		return result;
 		
